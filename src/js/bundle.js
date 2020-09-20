@@ -21339,11 +21339,12 @@ function shoot (ball, x_force, y_force) {
 /* GP STUFF */
 
 // GP Initialize
-
+var generation = 1;
 var take = 0;
 var track = 0;
 var activeShooters = [];
 var fitness = [];
+var familyTree = [];
 
 // random start
 for (i = 0; i < 3; i++) {
@@ -21378,19 +21379,27 @@ Events.on(engine, 'afterUpdate', function () {
                 fitness[track] = 0.1;
             }
 
-            console.log("Track: " + track);
-            console.log("Fitness added: " + fitness[track]);
-            console.log("Fitness: " + fitness);
             track += 1;
 
-            $('#generation').text("Generation: " + track);
-
         }
+
+        // print some stuff to page
+        // is this the best spot for this??
+        /*
+        $('#generation').text("Generation: " + generation);
+        $('#team').text("Team: " + track);
+        $('#fitness').text("Fitness: " + fitness);
+        */
+        // print player to family tree
+        $('#family_tree').append('<p>' + activeShooters[track-1].x + ', ' + activeShooters[track-1].y + '</p>');
 
         // evaluate fitness
         // this means that evaluation is over
         // each generation, old generation gets dropped
         if (track == size) {
+            // tell family tree there is a new generation!
+            $('#family_tree').text('');
+            $('#generation').text('Generation ' + generation);
             var rouletteWheel = [];
             // make roulette wheel
             for (i = 0; i <= fitness.length; i++) {
@@ -21429,6 +21438,7 @@ Events.on(engine, 'afterUpdate', function () {
             }
        
             // start over with the next generation!
+            generation += 1;
             track = 0;
         }
 
